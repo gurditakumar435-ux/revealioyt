@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Revealio YT — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+  :root{
+    --bg:#0b1120; --bg-elev:#111827; --bg-elev-2:#1a2436;
+    --text:#edeff2; --muted:#8892a8;
+    --cyan:#3b82f6; --magenta:#7c3aed; --border:#1f2a3d; --radius:10px;
+    --gradient:linear-gradient(135deg, var(--cyan), var(--magenta));
+    --glow:0 0 18px rgba(124,58,237,0.35), 0 0 10px rgba(59,130,246,0.25);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ background:var(--bg); color:var(--text); font-family:'Inter', sans-serif; min-height:100vh; -webkit-font-smoothing:antialiased; }
+  header.topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px clamp(20px,5vw,56px); border-bottom:1px solid var(--border);
+  }
+  .logo{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:20px; display:flex; align-items:center; gap:10px; }
+  .logo-photo{ width:32px; height:32px; border-radius:50%; object-fit:cover; border:1.5px solid var(--magenta); background:var(--bg-elev-2); box-shadow:0 0 10px rgba(124,58,237,0.4); }
+  .logo .yt{ font-family:'JetBrains Mono', monospace; font-size:12px; color:#fff; background:var(--gradient); padding:2px 6px; border-radius:4px; margin-left:8px; }
+  section.panel{ padding:0 clamp(20px,5vw,56px) 80px; max-width:600px; margin:0 auto; }
+  .lock-wrap{ max-width:380px; margin:60px auto; text-align:center; background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:40px 30px; }
+  .lock-wrap h3{ font-family:'Space Grotesk'; font-size:20px; margin-bottom:8px; }
+  .lock-wrap p{ color:var(--muted); font-size:13px; margin-bottom:20px; line-height:1.5; }
+  .pw-input{ width:100%; background:var(--bg-elev-2); border:1px solid var(--border); border-radius:8px; padding:11px 14px; color:var(--text); font-family:'JetBrains Mono'; font-size:14px; outline:none; margin-bottom:12px; }
+  .pw-input:focus{ border-color:var(--magenta); }
+  .pw-err{ color:var(--magenta); font-size:12px; font-family:'JetBrains Mono'; min-height:16px; margin-bottom:8px; }
+  .upload-form{ max-width:520px; margin:50px auto 0; background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:30px; }
+  .upload-form h3{ font-family:'Space Grotesk'; font-size:20px; margin-bottom:4px; }
+  .upload-form .sub{ color:var(--muted); font-size:13px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .signout{ font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--muted); background:none; border:1px solid var(--border); border-radius:6px; padding:5px 10px; cursor:pointer; white-space:nowrap; }
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
+  .field input[type="text"], .field input[type="email"], .field input[type="password"], .field select{
+    width:100%; background:var(--bg-elev-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); font-size:14px; outline:none;
+  }
+  .field input:focus, .field select:focus{ border-color:var(--cyan); }
+  .file-drop{ border:1.5px dashed var(--border); border-radius:8px; padding:22px; text-align:center; cursor:pointer; color:var(--muted); font-size:13px; }
+  .file-drop:hover{ border-color:var(--cyan); color:var(--text); }
+  .file-drop input{ display:none; }
+  .upload-status{ font-family:'JetBrains Mono', monospace; font-size:12px; margin-top:14px; min-height:16px; }
+  .upload-status.ok{ color:var(--cyan); }
+  .upload-status.err{ color:var(--magenta); }
+  .submit-btn{ width:100%; background:var(--gradient); color:#fff; border:none; border-radius:8px; padding:13px; font-family:'JetBrains Mono', monospace; font-weight:500; font-size:14px; cursor:pointer; margin-top:6px; box-shadow:var(--glow); transition:box-shadow .18s ease, transform .18s ease, filter .18s ease; }
+  .submit-btn:hover:not(:disabled){ filter:brightness(1.12); box-shadow:0 0 24px rgba(124,58,237,0.5), 0 0 14px rgba(59,130,246,0.35); transform:translateY(-1px); }
+  .submit-btn:disabled{ opacity:0.5; cursor:not-allowed; box-shadow:none; }
+  [hidden]{ display:none !important; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">
+    <img class="logo-photo" src="profile.png" alt="" onerror="this.style.display='none'">
+    REVEALIO<span class="yt">ADMIN</span>
+  </div>
+</header>
+
+<section class="panel">
+  <div class="lock-wrap" id="lock-wrap">
+    <div style="font-size:28px;margin-bottom:14px;">🔒</div>
+    <h3>Owner Login</h3>
+    <p>Sirf owner hi naye assets upload kar sakta hai.</p>
+    <input type="email" class="pw-input" id="owner-email" placeholder="Owner email" />
+    <input type="password" class="pw-input" id="owner-pw" placeholder="Password" />
+    <div class="pw-err" id="pw-err"></div>
+    <button class="submit-btn" id="pw-submit">Login</button>
+  </div>
+
+  <div class="upload-form" id="upload-form" hidden>
+    <h3>Upload Asset</h3>
+    <div class="sub"><span>Signed in as owner · max 10MB</span><button class="signout" id="signout-btn">Sign out</button></div>
+
+    <div class="field"><label>Asset name</label><input type="text" id="asset-name" placeholder="e.g. Cinematic Zoom Transition" /></div>
+    <div class="field"><label>Category</label>
+      <select id="asset-cat">
+        <option>Transitions</option><option>Overlays / VFX</option><option>Sound Effects</option>
+        <option>LUTs / Presets</option><option>Templates</option><option>Fonts</option>
+        <option>Thumbnails / Graphics</option><option>Music</option>
+      </select>
+    </div>
+    <div class="field"><label>File</label>
+      <div class="file-drop" id="file-drop"><span id="file-drop-text">Click to choose a file</span><input type="file" id="file-input" /></div>
+    </div>
+
+    <button class="submit-btn" id="upload-submit">Upload Asset</button>
+    <div class="upload-status" id="upload-status"></div>
+  </div>
+</section>
+
+<script>
+const SUPABASE_URL = "https://wsvsndiozuyoxlntndxl.supabase.co";
+const SUPABASE_KEY = "sb_publishable_9E0SGWwu5dqzDSNxjcuApQ_aq8ZT-xO";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const BUCKET = "assets";
+const CATEGORIES = ["Transitions","Overlays / VFX","Sound Effects","LUTs / Presets","Templates","Fonts","Thumbnails / Graphics","Music"];
+const MAX_BYTES = 10 * 1024 * 1024;
+
+function slugify(s){ return s.replace(/[^a-zA-Z0-9 ]/g,'').trim().replace(/\s+/g,'-') || 'asset'; }
+
+document.getElementById('pw-submit').addEventListener('click', async ()=>{
+  const email = document.getElementById('owner-email').value.trim();
+  const pw = document.getElementById('owner-pw').value;
+  document.getElementById('pw-err').textContent = '';
+  const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+  if(error){ document.getElementById('pw-err').textContent = 'Login fail: galat email/password.'; }
+});
+document.getElementById('signout-btn').addEventListener('click', ()=> sb.auth.signOut());
+
+function updateAuthUI(session){
+  document.getElementById('lock-wrap').hidden = !!session;
+  document.getElementById('upload-form').hidden = !session;
+}
+sb.auth.getSession().then(({data})=> updateAuthUI(data.session));
+sb.auth.onAuthStateChange((_event, session)=> updateAuthUI(session));
+
+const fileInput = document.getElementById('file-input');
+const fileDrop = document.getElementById('file-drop');
+const fileDropText = document.getElementById('file-drop-text');
+fileDrop.addEventListener('click', ()=> fileInput.click());
+fileInput.addEventListener('change', ()=>{ if(fileInput.files[0]) fileDropText.textContent = fileInput.files[0].name; });
+
+document.getElementById('upload-submit').addEventListener('click', async ()=>{
+  const nameEl = document.getElementById('asset-name');
+  const catEl = document.getElementById('asset-cat');
+  const statusEl = document.getElementById('upload-status');
+  const btn = document.getElementById('upload-submit');
+  const file = fileInput.files[0];
+
+  statusEl.className = 'upload-status'; statusEl.textContent = '';
+
+  if(!nameEl.value.trim()){ statusEl.className='upload-status err'; statusEl.textContent='Asset ka naam likhein.'; return; }
+  if(!file){ statusEl.className='upload-status err'; statusEl.textContent='File choose karein.'; return; }
+  if(file.size > MAX_BYTES){ statusEl.className='upload-status err'; statusEl.textContent='File 10MB se badi hai.'; return; }
+
+  btn.disabled = true;
+  statusEl.className = 'upload-status'; statusEl.textContent = 'Uploading…';
+
+  const catIndex = CATEGORIES.indexOf(catEl.value);
+  const ts = Date.now();
+  const ext = file.name.includes('.') ? file.name.split('.').pop() : 'bin';
+  const path = 'cat' + catIndex + '/' + ts + '_' + slugify(nameEl.value.trim()) + '.' + ext;
+
+  const { error } = await sb.storage.from(BUCKET).upload(path, file, { contentType: file.type, upsert: false });
+
+  if(error){
+    statusEl.className = 'upload-status err';
+    statusEl.textContent = 'Upload fail: ' + (error.message || 'dubara try karein.');
+    btn.disabled = false;
+  } else {
+    statusEl.className = 'upload-status ok';
+    statusEl.textContent = 'Upload ho gaya ✓';
+    nameEl.value = ''; fileInput.value = ''; fileDropText.textContent = 'Click to choose a file';
+    btn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>

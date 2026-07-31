@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact Us — Revealio YT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+  :root{
+    --bg:#0b1120; --bg-elev:#111827; --bg-elev-2:#1a2436;
+    --text:#edeff2; --muted:#8892a8;
+    --cyan:#3b82f6; --magenta:#7c3aed; --border:#1f2a3d; --radius:10px;
+    --gradient:linear-gradient(135deg, var(--cyan), var(--magenta));
+    --glow:0 0 18px rgba(124,58,237,0.35), 0 0 10px rgba(59,130,246,0.25);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{ scroll-behavior:smooth; }
+  body{ background:var(--bg); color:var(--text); font-family:'Inter', sans-serif; min-height:100vh; -webkit-font-smoothing:antialiased; display:flex; flex-direction:column; }
+  ::selection{ background:var(--magenta); color:#fff; }
+  header.topbar{ display:flex; align-items:center; justify-content:space-between; padding:18px clamp(20px,5vw,56px); border-bottom:1px solid var(--border); }
+  .logo{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:20px; display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+  .logo-photo{ width:32px; height:32px; border-radius:50%; object-fit:cover; border:1.5px solid var(--magenta); background:var(--bg-elev-2); box-shadow:0 0 10px rgba(124,58,237,0.4); }
+  .logo .yt{ font-family:'JetBrains Mono', monospace; font-size:12px; color:#fff; background:var(--gradient); padding:2px 6px; border-radius:4px; margin-left:8px; }
+  .back-link{ font-family:'JetBrains Mono', monospace; font-size:13px; font-weight:500; color:#fff; background:var(--gradient); text-decoration:none; display:inline-flex; align-items:center; padding:9px 20px; border-radius:999px; border:none; transition:filter .18s ease, transform .15s ease; }
+  .back-link:hover{ filter:brightness(1.12); transform:translateY(-2px); }
+  .page-heading{ padding:40px clamp(20px,5vw,56px) 0; }
+  .page-heading h1{ font-family:'Space Grotesk', sans-serif; font-weight:800; font-size:34px; color:#fff; text-align:left; line-height:1.15; }
+  @media (min-width:640px){ .page-heading h1{ font-size:42px; } }
+
+  main{ flex:1; padding:30px 16px 50px; display:flex; justify-content:center; }
+  .contact-card{ width:94%; max-width:500px; border-radius:4px; padding:32px 24px; background:linear-gradient(160deg, #f6f7f9, #e3e6eb); box-shadow:0 8px 26px rgba(0,0,0,0.26); color:#14161c; text-align:center; }
+  @media (min-width:640px){ .contact-card{ width:92%; padding:36px 32px; } }
+
+  .contact-icon{ font-size:56px; line-height:1; }
+  .contact-card .card-title{ font-family:'Space Grotesk', sans-serif; font-weight:800; font-size:36px; color:#101114; margin-top:12px; line-height:1.15; }
+  @media (min-width:640px){ .contact-card .card-title{ font-size:42px; } }
+  .contact-intro{ font-size:16px; color:#4b5563; line-height:1.6; max-width:400px; margin:14px auto 0; }
+
+  .contact-info{ margin-top:32px; }
+  .contact-info-item{ margin-bottom:16px; }
+  .contact-info-item:last-child{ margin-bottom:0; }
+  .contact-info-item .label{ font-family:'Space Grotesk', sans-serif; font-size:18px; font-weight:600; color:#111318; }
+  .contact-info-item .value{ font-size:16px; color:#4b5563; margin-top:4px; }
+
+  .btn-group{ display:flex; flex-direction:column; align-items:center; gap:16px; margin-top:34px; }
+  .btn-contact{ display:flex; align-items:center; justify-content:center; gap:10px; width:80%; height:56px; border-radius:16px; font-size:16px; font-weight:600; color:#fff; text-decoration:none; box-shadow:0 4px 12px rgba(0,0,0,0.16); transition:transform .18s ease, box-shadow .18s ease; }
+  .btn-contact:hover{ transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,0.22); }
+  .btn-contact svg{ width:18px; height:18px; stroke:#fff; flex-shrink:0; }
+  .btn-email{ background:linear-gradient(135deg,#22c55e,#14b8a6); }
+  .btn-telegram{ background:linear-gradient(135deg,#2AABEE,#229ED9); }
+  .btn-instagram{ background:linear-gradient(135deg,#F58529,#DD2A7B,#8134AF,#515BD4); }
+  .btn-youtube{ background:linear-gradient(135deg,#FF3B3B,#CC0000); }
+
+  footer{ text-align:center; padding:30px; color:var(--muted); font-family:'JetBrains Mono', monospace; font-size:11px; border-top:1px solid var(--border); }
+
+  /* Comments section */
+  .comments-wrap{ max-width:600px; margin:0 auto; width:100%; padding:40px clamp(20px,6vw,48px) 20px; }
+  .comments-heading{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:22px; letter-spacing:0.5px; text-transform:uppercase; color:var(--text); margin-bottom:20px; }
+
+  .comment-card{ background:var(--bg-elev); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:16px; }
+  .comment-head{ display:flex; align-items:center; gap:12px; }
+  .comment-avatar{ width:46px; height:46px; border-radius:50%; background:#d7dbe2; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .comment-avatar svg{ width:26px; height:26px; }
+  .comment-name{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:16px; color:var(--text); }
+  .comment-date{ font-size:12.5px; color:var(--muted); margin-top:2px; }
+  .comment-text{ font-size:14.5px; color:var(--muted); line-height:1.65; margin-top:14px; }
+  .comment-reply-btn{ display:inline-block; margin-top:14px; font-size:13.5px; font-weight:600; color:var(--magenta); background:none; border:none; cursor:pointer; padding:0; font-family:'Inter', sans-serif; }
+  .comment-reply-btn:hover{ text-decoration:underline; }
+  .comment-note{ font-size:12px; color:var(--muted); margin-top:10px; font-style:italic; }
+
+  .comment-reply-box{ margin-top:14px; padding-top:14px; border-top:1px solid var(--border); display:none; }
+  .comment-reply-box.open{ display:block; }
+  .comment-reply-box textarea{ width:100%; background:var(--bg-elev-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); font-family:'Inter', sans-serif; font-size:13.5px; resize:vertical; min-height:64px; }
+  .comment-reply-box button{ margin-top:8px; background:var(--gradient); color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Inter', sans-serif; }
+
+  .reply-thread{ margin-top:14px; margin-left:20px; padding-left:16px; border-left:2px solid var(--border); }
+  .reply-card{ background:var(--bg-elev-2); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
+  .reply-card .comment-name{ font-size:14px; color:var(--magenta); }
+  .reply-card .comment-name::after{ content:"OWNER"; font-family:'JetBrains Mono', monospace; font-size:9px; font-weight:600; color:#fff; background:var(--gradient); padding:2px 6px; border-radius:4px; margin-left:8px; vertical-align:middle; }
+  .reply-card .comment-text{ margin-top:8px; font-size:14px; color:var(--text); }
+
+  .comments-empty{ color:var(--muted); font-size:14px; padding:20px 0; }
+
+  .post-comment-toggle{ width:100%; text-align:center; background:var(--bg-elev); border:1px solid var(--border); border-radius:12px; padding:16px; color:var(--muted); font-size:14.5px; cursor:pointer; font-family:'Inter', sans-serif; transition:background .2s ease, color .2s ease; margin-top:6px; }
+  .post-comment-toggle:hover{ background:var(--bg-elev-2); color:var(--text); }
+
+  .comment-form{ display:none; margin-top:16px; background:var(--bg-elev); border:1px solid var(--border); border-radius:14px; padding:20px; }
+  .comment-form.open{ display:block; }
+  .comment-form label{ display:block; font-size:12.5px; color:var(--muted); margin:12px 0 5px; }
+  .comment-form label:first-of-type{ margin-top:0; }
+  .comment-form input, .comment-form textarea{ width:100%; background:var(--bg-elev-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); font-family:'Inter', sans-serif; font-size:14px; }
+  .comment-form textarea{ min-height:90px; resize:vertical; }
+  .comment-form .submit-comment-btn{ margin-top:16px; width:100%; background:var(--gradient); color:#fff; border:none; border-radius:10px; padding:12px; font-size:14.5px; font-weight:600; cursor:pointer; font-family:'Inter', sans-serif; transition:filter .18s ease; }
+  .comment-form .submit-comment-btn:hover{ filter:brightness(1.12); }
+  .comment-form .form-msg{ font-size:12.5px; margin-top:10px; }
+
+  /* Footer */
+  .info-section{ background:var(--bg-elev); border-top:1px solid var(--border); padding:clamp(44px,7vw,64px) 0; }
+  .info-section .wrap{ display:flex; flex-direction:column; gap:44px; max-width:1200px; margin:0 auto; padding:0 clamp(20px,5vw,56px); }
+  .info-block h2{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15px; letter-spacing:1px; text-transform:uppercase; color:var(--text); margin-bottom:14px; }
+  .info-block p{ color:var(--muted); font-size:14.5px; line-height:1.8; max-width:600px; }
+  .privacy-link{ display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--cyan); text-decoration:none; transition:gap .2s ease, color .2s ease; }
+  .privacy-link:hover{ gap:10px; color:var(--text); }
+
+  .social-row{ display:flex; gap:12px; flex-wrap:wrap; }
+  .social-square{ width:44px; height:44px; border-radius:12px; background:var(--bg-elev-2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text); text-decoration:none; transition:background .2s ease, border-color .2s ease, transform .15s ease; }
+  .social-square:hover{ background:var(--gradient); border-color:transparent; transform:translateY(-2px); }
+  .social-square svg{ width:19px; height:19px; stroke:currentColor; }
+
+  .popular-list{ display:flex; flex-direction:column; gap:12px; }
+  .popular-item{ display:flex; align-items:center; gap:14px; text-decoration:none; padding:8px; border-radius:10px; transition:background .2s ease; }
+  .popular-item:hover{ background:var(--bg-elev-2); }
+  .popular-thumb{ width:64px; height:64px; border-radius:8px; background:var(--bg-elev-2); border:1px solid var(--border); flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .popular-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .popular-thumb .ph{ color:var(--muted); font-size:18px; }
+  .popular-title{ color:var(--text); font-size:14px; font-weight:500; line-height:1.4; }
+  .popular-empty{ color:var(--muted); font-size:13.5px; }
+
+  .info-footer{ border-top:1px solid var(--border); padding:22px 0; text-align:center; color:var(--muted); font-family:'JetBrains Mono', monospace; font-size:11.5px; line-height:1.9; }
+  .info-footer a{ color:var(--muted); text-decoration:none; }
+  .info-footer a:hover{ color:var(--text); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="logo" href="index.html">
+    <img class="logo-photo" src="profile.png" alt="" onerror="this.style.display='none'">
+    REVEALIO<span class="yt">YT</span>
+  </a>
+  <a class="back-link" href="index.html">Back</a>
+</header>
+
+<div class="page-heading">
+  <h1>Contact Us</h1>
+</div>
+
+<main>
+  <div class="contact-card">
+    <div class="contact-icon">📩</div>
+    <div class="card-title">Contact Us</div>
+    <p class="contact-intro">Have a question, found a bug, or need support? Feel free to reach out anytime. We'll respond as quickly as possible.</p>
+
+    <div class="contact-info">
+      <div class="contact-info-item">
+        <div class="label">📧 Email</div>
+        <div class="value">support@revealioyt.com</div>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <a class="btn-contact btn-email" href="mailto:support@revealioyt.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Send Email
+      </a>
+      <a class="btn-contact btn-telegram" href="#" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Telegram
+      </a>
+      <a class="btn-contact btn-instagram" href="#" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        Instagram
+      </a>
+      <a class="btn-contact btn-youtube" href="#" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+        YouTube
+      </a>
+    </div>
+  </div>
+</main>
+
+<section class="comments-wrap">
+  <h2 class="comments-heading" id="commentsHeading">Comments</h2>
+  <div id="commentsList"></div>
+
+  <button class="post-comment-toggle" id="postToggle" type="button">Post a Comment</button>
+
+  <form class="comment-form" id="commentForm">
+    <label for="cName">Name (optional)</label>
+    <input type="text" id="cName" placeholder="Anonymous" maxlength="60" />
+
+    <label for="cEmail">Email (optional, not shown publicly)</label>
+    <input type="email" id="cEmail" placeholder="you@example.com" maxlength="120" />
+
+    <label for="cMessage">Comment</label>
+    <textarea id="cMessage" placeholder="Write your comment..." required maxlength="1000"></textarea>
+
+    <button type="submit" class="submit-comment-btn">Submit Comment</button>
+    <div class="form-msg" id="formMsg"></div>
+  </form>
+</section>
+
+<section class="info-section">
+  <div class="wrap">
+
+    <div class="info-block">
+      <h2>About Revealio &amp; Privacy</h2>
+      <p>REVEALIO is a premium editing asset library built for creators. We provide high-quality editing assets including PNGs, overlays, sound effects, fonts, and more to help creators edit faster and create better content.</p>
+      <a class="privacy-link" href="privacy-policy.html">Read Privacy Policy →</a>
+    </div>
+
+    <div class="info-block">
+      <h2>Follow Us</h2>
+      <div class="social-row">
+        <a class="social-square" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+        </a>
+        <a class="social-square" href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a class="social-square" href="#" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </a>
+        <a class="social-square" href="#" target="_blank" rel="noopener noreferrer" aria-label="X">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="info-block">
+      <h2>Popular Assets</h2>
+      <div class="popular-list" id="popularList">
+        <div class="popular-empty">Loading assets…</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="info-footer">
+    © 2026 REVEALIO YT — All Rights Reserved.<br/>
+    <a href="privacy-policy.html">Privacy Policy</a> · <a href="privacy-policy.html">Terms &amp; Conditions</a> · <a href="contact.html">Contact</a>
+  </div>
+</section>
+
+<script>
+const SUPABASE_URL = "https://wsvsndiozuyoxlntndxl.supabase.co";
+const SUPABASE_KEY = "sb_publishable_9E0SGWwu5dqzDSNxjcuApQ_aq8ZT-xO";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const PAGE_KEY = 'contact';
+
+let isAdmin = false;
+let allComments = [];
+
+function avatarSVG(){
+  return '<svg viewBox="0 0 24 24" fill="#9aa1ad"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.42 0-8 2.24-8 5v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1c0-2.76-3.58-5-8-5z"/></svg>';
+}
+
+function fmtDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' }) + ' at ' + d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : str;
+  return div.innerHTML;
+}
+
+async function loadComments(){
+  const { data, error } = await sb.from('comments').select('*').eq('page', PAGE_KEY).order('created_at', { ascending:false });
+  const listEl = document.getElementById('commentsList');
+  const headingEl = document.getElementById('commentsHeading');
+  if(error){
+    listEl.innerHTML = '<div class="comments-empty">Could not load comments right now.</div>';
+    return;
+  }
+  allComments = data || [];
+  const topLevel = allComments.filter(c=>!c.parent_id);
+  headingEl.textContent = topLevel.length + (topLevel.length===1 ? ' Comment' : ' Comments');
+
+  if(topLevel.length === 0){
+    listEl.innerHTML = '<div class="comments-empty">No comments yet. Be the first to comment!</div>';
+    return;
+  }
+
+  listEl.innerHTML = '';
+  topLevel.forEach(c=>{
+    const replies = allComments.filter(r=>r.parent_id === c.id).sort((a,b)=> new Date(a.created_at)-new Date(b.created_at));
+    const card = document.createElement('div');
+    card.className = 'comment-card';
+    card.innerHTML =
+      '<div class="comment-head">' +
+        '<div class="comment-avatar">' + avatarSVG() + '</div>' +
+        '<div><div class="comment-name">' + escapeHtml(c.name || 'Anonymous') + '</div><div class="comment-date">' + fmtDate(c.created_at) + '</div></div>' +
+      '</div>' +
+      '<div class="comment-text">' + escapeHtml(c.message) + '</div>' +
+      '<button class="comment-reply-btn" data-id="'+c.id+'">Reply</button>' +
+      (isAdmin
+        ? '<div class="comment-reply-box" id="replybox-'+c.id+'"><textarea placeholder="Write a reply as owner..." id="replytext-'+c.id+'"></textarea><br><button type="button" data-parent="'+c.id+'" class="submit-reply-btn">Post Reply</button></div>'
+        : '<div class="comment-note" id="replynote-'+c.id+'" style="display:none;">Only the site owner can reply.</div>');
+
+    if(replies.length){
+      const thread = document.createElement('div');
+      thread.className = 'reply-thread';
+      replies.forEach(r=>{
+        const rc = document.createElement('div');
+        rc.className = 'reply-card';
+        rc.innerHTML = '<div class="comment-name">Revealio YT</div><div class="comment-date">' + fmtDate(r.created_at) + '</div><div class="comment-text">' + escapeHtml(r.message) + '</div>';
+        thread.appendChild(rc);
+      });
+      card.appendChild(thread);
+    }
+
+    listEl.appendChild(card);
+  });
+
+  listEl.querySelectorAll('.comment-reply-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.getAttribute('data-id');
+      if(isAdmin){
+        document.getElementById('replybox-'+id).classList.toggle('open');
+      } else {
+        const note = document.getElementById('replynote-'+id);
+        note.style.display = note.style.display === 'block' ? 'none' : 'block';
+      }
+    });
+  });
+
+  listEl.querySelectorAll('.submit-reply-btn').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const parentId = btn.getAttribute('data-parent');
+      const textEl = document.getElementById('replytext-'+parentId);
+      const msg = textEl.value.trim();
+      if(!msg) return;
+      btn.disabled = true;
+      const { error } = await sb.from('comments').insert({ parent_id: parentId, name: 'Revealio YT', message: msg, is_admin: true, page: PAGE_KEY });
+      btn.disabled = false;
+      if(!error){ textEl.value = ''; loadComments(); }
+      else{ alert('Reply failed: ' + error.message); }
+    });
+  });
+}
+
+document.getElementById('postToggle').addEventListener('click', ()=>{
+  document.getElementById('commentForm').classList.toggle('open');
+});
+
+document.getElementById('commentForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const name = document.getElementById('cName').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+  const message = document.getElementById('cMessage').value.trim();
+  const msgEl = document.getElementById('formMsg');
+  if(!message) return;
+  const submitBtn = e.target.querySelector('.submit-comment-btn');
+  submitBtn.disabled = true;
+  const { error } = await sb.from('comments').insert({
+    name: name || 'Anonymous',
+    email: email || null,
+    message: message,
+    parent_id: null,
+    is_admin: false,
+    page: PAGE_KEY
+  });
+  submitBtn.disabled = false;
+  if(error){
+    msgEl.style.color = '#f87171';
+    msgEl.textContent = 'Something went wrong. Please try again.';
+  } else {
+    msgEl.style.color = '#4ade80';
+    msgEl.textContent = 'Comment posted!';
+    document.getElementById('cName').value = '';
+    document.getElementById('cEmail').value = '';
+    document.getElementById('cMessage').value = '';
+    loadComments();
+  }
+});
+
+(async function initComments(){
+  const { data } = await sb.auth.getSession();
+  isAdmin = !!(data && data.session);
+  sb.auth.onAuthStateChange((_e, session)=>{ isAdmin = !!session; loadComments(); });
+  loadComments();
+})();
+</script>
+
+<script>
+  (async function loadPopularAssets(){
+    const listEl = document.getElementById('popularList');
+    if(!listEl || typeof supabase === 'undefined') return;
+    try{
+      const sbFooter = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      const BUCKET = "assets";
+      const CATEGORY_COUNT = 8;
+      const results = [];
+      for(let i=0;i<CATEGORY_COUNT;i++){
+        const { data, error } = await sbFooter.storage.from(BUCKET).list('cat'+i, { limit: 20, sortBy: { column: 'created_at', order: 'desc' } });
+        if(error || !data) continue;
+        data.forEach(obj=>{
+          if(!obj.name || obj.name.startsWith('.')) return;
+          const path = 'cat'+i+'/'+obj.name;
+          const { data: urlData } = sbFooter.storage.from(BUCKET).getPublicUrl(path);
+          const match = obj.name.match(/^(\d+)_(.+)\.([^.]+)$/);
+          let ts = 0, displayName = obj.name, ext = '';
+          if(match){ ts = parseInt(match[1]); displayName = match[2].replace(/-/g,' '); ext = match[3]; }
+          const mime = (obj.metadata && obj.metadata.mimetype) ? obj.metadata.mimetype : '';
+          results.push({ name: displayName, url: urlData.publicUrl, ts: ts, mime: mime, ext: (ext||'').toLowerCase() });
+        });
+      }
+      results.sort((a,b)=>b.ts-a.ts);
+      const top = results.slice(0,5);
+      if(top.length === 0){
+        listEl.innerHTML = '<div class="popular-empty">No assets available yet.</div>';
+        return;
+      }
+      listEl.innerHTML = '';
+      top.forEach(a=>{
+        const isImage = a.mime.startsWith('image') || ['png','jpg','jpeg','webp','gif'].includes(a.ext);
+        const item = document.createElement('a');
+        item.className = 'popular-item';
+        item.href = 'index.html';
+        item.innerHTML =
+          '<div class="popular-thumb">' + (isImage ? '<img src="'+a.url+'" alt="" loading="lazy">' : '<span class="ph">📄</span>') + '</div>' +
+          '<div class="popular-title">' + a.name + '</div>';
+        listEl.appendChild(item);
+      });
+    }catch(e){
+      listEl.innerHTML = '<div class="popular-empty">Couldn\'t load assets right now.</div>';
+    }
+  })();
+</script>
+
+</body>
+</html>
